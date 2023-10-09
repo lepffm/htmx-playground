@@ -1,0 +1,16 @@
+<div class="navbar bg-base-300">
+    <div class="flex-1">
+      <a onclick="swapMain('#intro')" class="btn btn-ghost normal-case text-xl">htmx playground</a>
+    </div>
+    <div class="flex-none">
+      <ul class="menu menu-horizontal px-1">
+        <li><div onclick="loadReadme()">README</div></li>
+        <li>
+            <div onclick="hxTrigger('link')">Link</div>
+        </li>
+        <li>
+            <div onclick="hxTrigger('book')">Book</div>
+        </li>
+      </ul>
+    </div>
+  </div>

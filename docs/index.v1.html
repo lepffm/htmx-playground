@@ -1,0 +1,249 @@
+<html lang="en" data-theme="halloween">
+<!-- theme from https://daisyui.com/docs/themes/-->
+<head>
+    <title>htmx playground</title>
+    <script src="https://unpkg.com/htmx.org"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/client-side-templates.js"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
+    <script src="https://unpkg.com/mustache@latest"></script>
+
+    <script src="https://unpkg.com/tailwindcss-jit-cdn"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.2/dist/full.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-dark.min.css" type="text/css" />
+
+    <script type="module" src="script/markdown.js"></script>
+    <script>
+      function loaded(){
+        showReadMe();
+        loadFooter();
+      }
+      function loadFooter() {
+        fetch('./pages/footer.html')
+        .then(response => response.text())
+        .then(data => {
+            document.querySelector('.footer').innerHTML = data;
+        }).catch(e => console.log(e));
+      }
+      function showReadMe() {
+        fetch('./pages/README.md')
+        .then(response => response.text())
+        .then(data => {
+            document.querySelector('.rawReadme').innerHTML = data;
+            showMarkdown('.rawReadme','.readme')
+        }).catch(e => console.log(e));
+      }
+      function deleteHeader(event){
+        event.detail.headers = '';
+        event.detail.headers['Authorization'] = "token ghp_XXX";
+      }
+        
+      function copyContent(event){
+        console.log(event)
+      }
+    </script>
+</head>
+<body 
+  hx-ext="client-side-templates, json-enc, ajax-header, debug" 
+  hx-on="htmx:configRequest: deleteHeader(event);"
+  hx-boost="true" 
+  class="w-full" onload="loaded()">
+  <div>
+    <div class="tabmenu out-tabmenu">
+        <ul>
+          <li id="tab1" class="btnCon"> 
+            <input type="radio" checked name="tabmenu" id="tabmenu1">
+            <label for="tabmenu1" class="rounded-t-md px-8 underline hover:cursor-pointer hover:accent-teal-500">menu1</label>
+            <div class="tabCon" >
+              <article class="readme markdown-body entry-content" style="min-height: 100px;"></article>
+              <div class="rawReadme" style="display:none">hoho</div>
+            </div>
+          </li>
+          <li id="tab2" class="btnCon"><input type="radio"  name="tabmenu" id="tabmenu2">
+            <label for="tabmenu2" class="rounded-t-md px-8 underline hover:cursor-pointer hover:accent-teal-500">books</label>
+            <div class="tabCon" 
+            hx-get_="data/issues.json" 
+            hx-get="https://api.github.com/repos/lepffm/issuance/issues?labels=book"
+            hx-trigger="revealed"
+            hx-target="#github-tr"
+            mustache-array-template="github-list">
+                <h2>all issues</h2>
+                <div id="tab-content" style="min-height: 100px">
+                    <table id="github-issues" class="table table-pin-rows">
+                        <thead>
+                        <tr>
+                            <th class="">number</th>
+                            <th class="">title</th>
+                            <th class="">label</th>
+                        </tr>
+                        </thead>
+                        <tbody id="github-tr">
+                        </tbody>
+                    </table>
+                    <div class="divider"></div>
+                    <div id="issue-detail" class="card"></div>
+                </div>
+            </div>
+            
+          </li>    
+          <li id="tab3" class="btnCon"><input type="radio"  name="tabmenu" id="tabmenu3">
+            <label for="tabmenu3" class="rounded-t-md px-8 underline hover:cursor-pointer hover:accent-teal-500">link</label>
+            <div class="tabCon" hx-target="main"
+            hx-get="https://api.github.com/repos/lepffm/issuance/issues?labels=LINK"
+            hx-trigger="revealed"
+            mustache-template="link-list">
+                <div id="link-tr"></div>
+        </div>
+          </li>
+          <li id="tab4" class="btnCon">
+            <form id="issue-form" 
+            >
+            <div id="response">submit response</div>
+
+            <input type="radio"  name="tabmenu" id="tabmenu4">
+            <label for="tabmenu4" class="rounded-t-md px-8 underline hover:cursor-pointer hover:accent-teal-500">form</label>
+            <div class="tabCon">
+              <div>
+              <h2>issu registraion</h2>
+              </div>
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">title</span>
+                </label>
+                <input type="text" name="title" placeholder="input title" value="aa" class="input input-bordered" required />
+              </div>
+              <div class="form-control"
+                hx-get="https://api.github.com/repos/lepffm/issuance/labels"
+                mustache-template="label-select"
+                hx-target="#select-labels"
+                hx-swap="innerHTML"
+                hx-trigger="load"
+              >
+                <label class="label">
+                  <span class="label-text">title</span>
+                </label>
+                <select id="select-labels" name="labelsx" class="select select-info w-full max-w-xs">
+                  <option disabled selected>select label</option>
+                </select>
+              </div>
+              <div>
+                <label class="label">
+                  <span class="label-text">content</span>
+                </label>
+                <div class="monaco markdown-body" style="min-height: 100px;width:100%" class=""></div>
+                <input type="hidden" id="issueBody" name="body" value="body">
+                <input type="hidden" name="milestone" value="1">
+                <input type="hidden" name="assignees[]">
+                <input type="hidden" name="labels[]">
+              </div>
+              <div class="form-control mt-6">
+                <button type="submit" 
+                hx-post="https://api.github.com/repos/lepffm/issuance/issues" 
+                hx-confirm="are you sure?"
+                hx-swap="none"  
+                hx-params="not labelsx,tabmenu"
+                hx-on:htmx:before-request="copyMonacoToFormData('issueBody')"
+                    class="btn btn-primary" form="issue-form">Save</button>
+              </div>
+            </div>
+            </form>
+          </li>
+          <li>
+            <a class="" href="https://github.com/lepffm/issuance/issues">
+            <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"></a>
+          </li>
+        </ul>
+      </div>
+<!-- templates -->
+    <template id="github-list">
+        {{#data}}
+        <tr hx-get_="data/issue.json" class="github-list-tr"
+            hx-on:htmx:after-request="showMarkdown('.rawBody','.markdown');"
+            hx-get="https://api.github.com/repos/lepffm/issuance/issues/{{number}}"
+            hx-trigger="click" hx-target="#issue-detail"
+            mustache-template="github-issue">
+            <td>{{number}}</td>
+            <td>{{title}}</td>
+            <td>{{updated_at}}</td>
+        </tr>
+        {{/data}}
+    </template>
+    <template id="link-list">
+        {{#.}}
+        <div>
+          <a class="link link-accent" href="{{body}}" alt="{{title}}" title="{{title}}">{{title}}</a>
+        </div>
+        {{/.}}
+    </template>
+    <template id="label-select">
+      <option disabled selected>select label</option>
+      {{#.}}
+      <option title="{{name}} {{description}}">{{name}}</option>
+      {{/.}}
+    </template>
+    <template id="github-issue">
+            <div class="card-title">
+                {{title}}
+            </div>
+            <div>
+
+              {{#labels}}<p class="badge badge-accent">{{name}}</p>{{/labels}}
+            </div>
+            <div>
+                <div class="markdown markdown-body" style="min-height: 100px;"></div>
+            </div>
+            <div class="">
+                <label>updated</label><p>{{updated_at}}</p>
+            </div>
+            <p class="rawBody" style="display:none">{{body}}</p>
+    </template>
+</div>
+</body>
+<style>
+
+ul{list-style:none;}
+.tabmenu{ 
+  margin: 0 auto; 
+  position:relative; 
+}
+.tabmenu ul{
+  position: relative;
+}
+.tabmenu ul li{
+  display:  inline-block;
+  float:left;  
+  text-align:center; 
+  line-height:40px;
+}
+.tabmenu label{
+  display:block;
+  width:100%; 
+  height:40px;
+  line-height:40px;
+}
+.tabmenu input[type='radio']{display:none;}
+.tabCon{
+  display:none; 
+  width: 100%;
+  text-align:left; 
+  padding: 20px;
+  position:absolute; 
+  left:0; top:40px; 
+  box-sizing: border-box; 
+  border : 5px solid #f9f9f9;
+}
+.tabmenu input:checked ~ label{
+  background:teal;
+  color: white;
+  text-decoration-style: wavy;
+  
+  :hover{
+    accent-color: #99f6e4;
+  }
+}
+.tabmenu input:checked ~ .tabCon{
+  display: block;
+}
+
+</style>
+</html>

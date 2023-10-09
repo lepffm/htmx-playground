@@ -1,0 +1,22 @@
+<div class="card-body">
+    <div>
+        <div id="issue-detail" class="card"></div>
+        <div class="join grid place-content-end">
+            <button onclick="hxTrigger('book')" class="join-item btn btn-outline">List</button>
+          </div>
+    </div>
+</div>
+
+<template id="github-issue">
+    <div class="card-title">{{title}}</div>
+    <div>
+      {{#labels}}<p class="badge badge-accent">{{name}}</p>{{/labels}}
+    </div>
+    <div>
+        <div class="markdown markdown-body" style="min-height: 100px;"></div>
+    </div>
+    <div class="">
+        <label>updated</label><p>{{updated_at}}</p>
+    </div>
+    <p class="rawBody" style="display:none">{{body}}</p>
+</template>

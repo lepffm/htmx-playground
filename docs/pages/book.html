@@ -1,0 +1,23 @@
+<div class="card-body">
+    <div class="card-title">Book</div>
+    <table id="github-issues" class="table table-pin-rows">
+        <thead>
+        <tr>
+            <th class="">number</th>
+            <th class="">title</th>
+            <th class="">label</th>
+        </tr>
+        </thead>
+        <tbody id="github-tr">
+        </tbody>
+    </table>
+</div>
+<template id="github-list">
+    {{#data}}
+    <tr class="github-list-tr">
+        <td>{{number}}</td>
+        <td class="link link-success" onclick="showIssue({{number}})">{{title}}</td>
+        <td>{{updated_at}}</td>
+    </tr>
+    {{/data}}
+</template>

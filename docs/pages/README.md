@@ -1,24 +1,23 @@
 # htmx-playground
 htmx study
 
-# use static server for testing
-```shell
-npm -g install static-server
-static-server docs -p 8080 -c * -z 
-```
-
+# menu structure
+- README
+  - show converted README.md page
+- Book
+  - show github issue list with labeled by book
+  - show github issue detail  
+- Link
+  - show github issue list with labeled by link
 # troubleshooting
 - CORS
  - `hx-on:htmx:config-equest="event.detail.headers='';"`
 - json handling
   - template : mustache plugin
   - json encoding : json-enc extensions 
-    ```
-        <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
-        <div hx-ext="json-enc">
-    ```  
 - tailwind cdn warning
   - ues jit-cdn
+
 
 # references
 - [htmx](https://htmx.org)
