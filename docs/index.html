@@ -26,16 +26,19 @@
     <div id="footer" class="flex-none"></div>
   </div>
   <div class="htmx-event-layer">
+    <div id="issues-hx" hx-trigger="click" hx-target="#issues-tr" hx-swap="beforeend" hx-on:htmx:after-request="pageIssue(event)" 
+      hx-get="https://api.github.com/repos/lepffm/issuance/issues?page=1&per_page=50" mustache-array-template="issues-list"></div>
     <div id="link-hx" hx-trigger="click" hx-target="#link-tr" hx-on:htmx:after-request="swapMain('#link')"
       hx-get="https://api.github.com/repos/lepffm/issuance/issues?labels=LINK" mustache-template="link-list"></div>
     <div id="book-hx" hx-trigger="click" hx-target="#github-tr" hx-on:htmx:after-request="swapMain('#book')"
       hx-get="https://api.github.com/repos/lepffm/issuance/issues?labels=book" mustache-array-template="github-list"></div>
-    <div id="detail-hx" hx-on:htmx:after-request="showMarkdown('.rawBody','.markdown');swapMain('#detail')"
+    <div id="detail-hx" hx-on:htmx:after-request="showMarkdown('.rawBody','.markdown');swapMain('#detail')")
       hx-get="https://api.github.com/repos/lepffm/issuance/issues/{{number}}" hx-trigger="click"
       hx-target="#issue-detail" mustache-template="github-issue"></div>
   </div>
   <div class="swap-area" style="display: none;">
     <div id="intro"></div>
+    <div id="issues"></div>
     <div id="link"></div>
     <div id="book"></div>
     <div id="detail"></div>

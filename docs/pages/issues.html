@@ -1,0 +1,30 @@
+<div class="card-body">
+    <div class="card-title">Issues</div>
+    <table id="all-issues" class="table table-pin-rows">
+        <thead>
+        <tr>
+            <th class="">number</th>
+            <th class="">title</th>
+            <th class="">label</th>
+            <th class="">updated</th>
+        </tr>
+        </thead>
+        <tbody id="issues-tr"><tr></tr>
+        </tbody>
+        <tfoot>
+            <tr class="issues-list-tr-next"><td colspan=5><div class="flex justify-center"><button onclick="listIssue()">
+                Load More.
+            </button></div></td></tr>
+        </tfoot>
+</table>
+</div>
+<template id="issues-list">
+    {{#data}}
+    <tr class="issues-list-tr">
+        <td>{{number}}</td>
+        <td class="link link-success" onclick="showIssue({{number}})">{{title}}</td>
+        <td>{{#labels}}<p class="badge badge-accent">{{name}}</p>{{/labels}}</td>
+        <td>{{updated_at}}</td>
+    </tr>
+    {{/data}}
+</template>

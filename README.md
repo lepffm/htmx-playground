@@ -22,9 +22,10 @@ static-server docs -p 8080 -c * -z
 
 # references
 - [htmx](https://htmx.org)
-  - [htmx client side template](https://htmx.org/extensions/client-side-temlates)
+  - [htmx client side template](https://htmx.org/extensions/client-side-templates)
   - [htmx extension](https://htmx.org/attributes/hx-ext/)
   - [mustache](https://github.com/janl/mustache.js)
+  - [htmx in action[(https://hypermedia.systems/htmx-in-action/)
 - style 
   - [tailwind css](https://tailwindcss.com)
   - [daisy ui](https://daisyui.com/)
