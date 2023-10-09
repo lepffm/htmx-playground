@@ -4,8 +4,8 @@ htmx study
 # menu structure
 - README
   - show converted README.md page
-- Book
-  - show github issue list with labeled by book
+- Issues
+  - show github issue list
   - show github issue detail  
 - Link
   - show github issue list with labeled by link

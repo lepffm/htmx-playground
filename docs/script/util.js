@@ -1,94 +1,98 @@
 /* domain method */
-function loadLayout(){
-    preloadHtml('intro', () => swapMain('#intro') );
+function loadLayout() {
+    preloadHtml('intro', () => swapMain('#intro'));
     preloadHtmls(
-      [ 'gnb', 'footer', // layout
-        'issues', 'link', 'book', 'detail' // menu
-      ] 
+        ['gnb', 'footer', // layout
+            'issues', 'link', 'detail' // menu
+        ]
     );
-  }
+}
 function loadReadme() {
-    preload('./pages/README.md', '#rawReadme', () => 
-      showMarkdown('#rawReadme', '#main')
+    preload('./pages/README.md', '#rawReadme', () =>
+        showMarkdown('#rawReadme', '#main')
     );
 }
-function showIssue(id) {
-    const url = document.querySelector('#detail-hx')
+function showIssue(newPage) {
+    const DETAIL_HX_ID = '#detail-hx';
+    const url = document.querySelector(DETAIL_HX_ID)
+        .getAttribute('hx-get');
+    // https://a.b.c/d/page/NNN
+    const curPage = extractPageByRegex(url, /\bissues\/(\d+)$/, 1);
+    const newUrl = document.querySelector(DETAIL_HX_ID)
         .getAttribute('hx-get')
-        .replace("{{number}}", id);
-    clickHtmxEvent('#detail-hx', 'get', url);
+        .replace("issues/" + curPage, "issues/" + newPage);
+
+    clickHtmxEvent(DETAIL_HX_ID, 'get', newUrl);
 }
-function pageIssue(evt){
-    if(evt.detail.xhr.response.length <= 5){
+
+function pageIssue(evt) {
+    if (evt.detail.xhr.response.length <= 5) {
         // hide more btn
-        document.querySelector('.issues-list-tr-next').style.display = 'none'; 
+        document.querySelector('.issues-list-tr-next').style.display = 'none';
     }
     swapMain('#issues')
 }
-function listIssue(){
-    const curUrl =  document.querySelector('#issues-hx')
-    .getAttribute('hx-get');
-    let currentPage = extractPageNoWithUrl(curUrl);
+function listIssue() {
+    const LIST_HX_ID = '#issues-hx';
+    const url = document.querySelector(LIST_HX_ID)
+        .getAttribute('hx-get');
+    // https://a.b.c/d?page=NNN
+    let currentPage = extractPageByRegex(url, /\bpage=(\d+)/);
     const nextPage = currentPage + 1;
-    const url = document.querySelector('#issues-hx')
+    const newUrl = document.querySelector(LIST_HX_ID)
         .getAttribute('hx-get')
-        .replace("page="+currentPage, "page="+nextPage);
+        .replace("page=" + currentPage, "page=" + nextPage);
 
-    clickHtmxEvent('#issues-hx', 'get', url);
+    clickHtmxEvent(LIST_HX_ID, 'get', newUrl);
 }
-
 function preloadHtmls(args = []) {
     args.forEach((id) => {
         preloadHtml(id);
     });
 }
-function preloadHtml(arg, callback){
-    preload('./pages/'+arg+'.html', '#' + arg, callback);
+function preloadHtml(arg, callback) {
+    preload('./pages/' + arg + '.html', '#' + arg, callback);
 }
 
 /* funcional method */
-function preload(loadFile, targetId, callback = ()=>{}) { 
+function preload(loadFile, targetId, callback = () => { }) {
     fetch(loadFile)
         .then(response => response.text())
         .then(data => {
             document.querySelector(targetId).innerHTML = data;
-            if(callback) callback();
+            if (callback) callback();
         }).catch(e => console.log(e));
 }
 function swapMain(src) {
     //check if already swap
-    const hx = document.querySelector(src+'-hx');
+    const hx = document.querySelector(src + '-hx');
     let needSwap = true;
-    if(hx){
+    if (hx) {
         const target = hx.getAttribute('hx-target');
-        if(document.querySelectorAll(target).length > 1){
+        if (document.querySelectorAll(target).length > 1) {
             needSwap = false;
         }
     }
 
-    if(needSwap){
+    if (needSwap) {
         document.querySelector('#main').innerHTML = document.querySelector(src).innerHTML;
     }
     document.querySelector('#main').classList.remove('markdown-body');
 }
-function appendMain(src){
-   document.querySelector('#main').innerHTML += document.querySelector(src).innerHTML;
-}   
 function hxTrigger(id, arg) {
     htmx.trigger('#' + id + '-hx', 'click', arg);
 }
-function clickHtmxEvent(selector, method, url ,swap = ''){
+function clickHtmxEvent(selector, method, url) {
     const elm = document.querySelector(selector);
-    elm.setAttribute('hx-'+method, url);
+    elm.setAttribute('hx-' + method, url);
     htmx.process(elm);
     htmx.trigger(selector, 'click');
 }
-// example: https://a.b.c/d?page=NNN
-function extractPageNoWithUrl(url){
-    const match = /\bpage=(\d+)/.exec(url);
-    let page = 1;
-    if(match && match.length>1){
-        page = parseInt(match[1],10);
+function extractPageByRegex(url, regex, defaultVal = 1) {
+    const match = regex.exec(url)
+    let page = defaultVal;
+    if (match && match.length > 1) {
+        page = parseInt(match[1], 10);
     }
     return page;
 }
