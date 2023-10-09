@@ -24,13 +24,34 @@ function showIssue(newPage) {
 
     clickHtmxEvent(DETAIL_HX_ID, 'get', newUrl);
 }
-
+// fire after request
 function pageIssue(evt) {
+    // hide more btn
     if (evt.detail.xhr.response.length <= 5) {
-        // hide more btn
-        document.querySelector('.issues-list-tr-next').style.display = 'none';
+        document.querySelector('.issues-list-tr-next').style.display = 'none'; 
     }
+    // select setting
+    console.log(evt.detail.requestConfig.parameters.labels);
+    const labels = evt.detail.requestConfig.parameters.labels ? evt.detail.requestConfig.parameters.labels : '';
     swapMain('#issues')
+    document.getElementById('issue-label').value = labels;
+}
+function searchIssue(label=''){
+    const LIST_HX_ID = '#issues-hx';
+    const url = document.querySelector(LIST_HX_ID)
+        .getAttribute('hx-get');
+    let currentLabel = extractPageByRegex(url, /\blabels=(\w+)\b/,'');
+    const newUrl = document.querySelector(LIST_HX_ID)
+        .getAttribute('hx-get')
+        .replace("labels=" + currentLabel, "labels=" + label);
+    // TODO reset page num
+
+    // clean up
+    document.querySelector('#main').innerHTML = '';
+    // hx-vals {json}
+    document.querySelector(LIST_HX_ID)
+        .setAttribute('hx-vals',`{"labels":"${label}"}`)
+    clickHtmxEvent(LIST_HX_ID, 'get', newUrl, 'innerHTML');
 }
 function listIssue() {
     const LIST_HX_ID = '#issues-hx';
@@ -38,12 +59,12 @@ function listIssue() {
         .getAttribute('hx-get');
     // https://a.b.c/d?page=NNN
     let currentPage = extractPageByRegex(url, /\bpage=(\d+)/);
-    const nextPage = currentPage + 1;
+    const nextPage = parseInt(currentPage,10) + 1;
     const newUrl = document.querySelector(LIST_HX_ID)
         .getAttribute('hx-get')
         .replace("page=" + currentPage, "page=" + nextPage);
 
-    clickHtmxEvent(LIST_HX_ID, 'get', newUrl);
+    clickHtmxEvent(LIST_HX_ID, 'get', newUrl, "beforeend");
 }
 function preloadHtmls(args = []) {
     args.forEach((id) => {
@@ -82,9 +103,12 @@ function swapMain(src) {
 function hxTrigger(id, arg) {
     htmx.trigger('#' + id + '-hx', 'click', arg);
 }
-function clickHtmxEvent(selector, method, url) {
+function clickHtmxEvent(selector, method, url, swap) {
     const elm = document.querySelector(selector);
     elm.setAttribute('hx-' + method, url);
+    if(swap){
+        elm.setAttribute('hx-swap',swap);
+    }
     htmx.process(elm);
     htmx.trigger(selector, 'click');
 }
@@ -92,7 +116,7 @@ function extractPageByRegex(url, regex, defaultVal = 1) {
     const match = regex.exec(url)
     let page = defaultVal;
     if (match && match.length > 1) {
-        page = parseInt(match[1], 10);
+        page = match[1];
     }
     return page;
 }

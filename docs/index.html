@@ -28,7 +28,7 @@
   <div class="htmx-event-layer">
     <div id="issues-hx" hx-trigger="click" hx-target="#issues-tr" hx-swap="beforeend"
       hx-on:htmx:after-request="pageIssue(event)"
-      hx-get="https://api.github.com/repos/lepffm/issuance/issues?page=1&per_page=20"
+      hx-get="https://api.github.com/repos/lepffm/issuance/issues?page=1&per_page=20&labels="
       mustache-array-template="issues-list"></div>
     <div id="link-hx" hx-trigger="click" hx-target="#link-tr"
       hx-on:htmx:after-request="swapMain('#link')"

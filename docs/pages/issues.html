@@ -1,5 +1,10 @@
 <div class="card-body">
     <div class="card-title">Issues</div>
+    <select name="labels" id="issue-label" onchange="searchIssue(this.value)">
+        <option value="">all</option>
+        <option value="LINK">link</option>
+        <option value="book">book</option>
+    </select>
     <table id="all-issues" class="table table-pin-rows">
         <thead>
         <tr>
