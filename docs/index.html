@@ -20,11 +20,12 @@
 
 <body hx-ext="client-side-templates, json-enc, ajax-header" hx-on:htmx:config-request="event.detail.headers='';"
   hx-boost="true" class="w-full" onload="loadLayout()">
-  <div class="content">
+   <div class="content">
     <div id="gnb" class="flex-none"></div>
     <div id="main" class="mx-8 mt-6 grow min-h-[80%] bg-base-100 shadow-xl"></div>
     <div id="footer" class="flex-none"></div>
-  </div>
+    <div id="counter">0</div>
+   </div>
   <div class="htmx-event-layer">
     <div id="issues-hx" hx-trigger="click" hx-target="#issues-tr" hx-swap="beforeend"
       hx-on:htmx:after-request="pageIssue(event)"
@@ -36,6 +37,7 @@
     <div id="detail-hx" hx-on:htmx:after-request="showMarkdown('.rawBody','.markdown');swapMain('#detail')"
       hx-get="https://api.github.com/repos/lepffm/issuance/issues/0" hx-trigger="click" 
       hx-target="#issue-detail" mustache-template="github-issue"></div>
+    <div id="counter-hx" hx-get="https://api.countapi.xyz/hit/lepffm.github.io/counter" hx-trigger="click" hx-target="#counter">click</div>
   </div>
   <div class="swap-area" style="display: none;">
     <div id="intro"></div>
