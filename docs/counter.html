@@ -1,0 +1,15 @@
+<html lang="en" data-theme="coffee">
+<head>
+  <title>htmx playground</title>
+  <script src="https://unpkg.com/htmx.org"></script>
+  <script src="https://unpkg.com/htmx.org/dist/ext/client-side-templates.js"></script>
+  <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
+  <script src="https://unpkg.com/mustache@latest"></script>
+</head>
+
+<body hx-ext="client-side-templates, json-enc, ajax-header" hx-on:htmx:config-request="event.detail.headers='';"
+  hx-boost="true" class="w-full" >
+    <div id="counter">0</div>
+    <div id="counter-hx" hx-get="https://api.countapi.xyz/hit/lepffm.github.io/counter" hx-trigger="click" hx-target="#counter">click</div>
+</body>
+</html>
