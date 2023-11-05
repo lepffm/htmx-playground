@@ -8,7 +8,7 @@
     features
     - lightwight - 157 kB (min.js 46.7 kB) cf) react
     - less javascript (JS-in-HTML), use html extended attribute, aka hyper-script
-    - supprot GET,POST + PUT, DELETE, websocket
+    - supprot GET,POST + PUT, DELETE, PATCH, websocket
         <code> &lt;form hx-post="/submit-form" hx-swap="outerHTML" hx-target=#formResponse&gt; </code>
     - support client template for json
     - support trigger <code> hx-trigger="every 10s" </code>    
@@ -21,14 +21,14 @@
 
 
     good
-    - performance
-    - zero project setting
-    - less complicated client logic
+    - zero project setting(webpack/vite etc)
+    - less complicated client logic/javascript
     - easy for backend developer
+    - no build process
 
     bad
     - not support VirtualDOM - not fit for heavy update
-    - not support state management ( use backend )
+    - not support modern frontend technic (spa, routing, compress, state management, etc)
     - not support linting, static analysis, debugging
         </pre>
 </div>
