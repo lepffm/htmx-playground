@@ -1,0 +1,27 @@
+<div>
+    sample!
+
+    <div>
+        <button class="btn"
+        onclick="htmx.trigger('#sample-get-hx', 'click')">
+          get uuid
+        </button>
+
+        <button class="btn"
+        onclick="htmx.trigger('#sample-hx', 'click')">
+          confirm Submission
+        </button>
+
+        <button class="btn"
+        onclick="htmx.trigger('#sample-delete-hx', 'click')">
+          delete method
+        </button>
+
+        <div id="post-response"></div>
+      </div>
+</div>
+
+<template id="post-list">
+    <div>{{url}} response </div>
+    <div>{{uuid}}</div>
+</template>

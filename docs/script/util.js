@@ -12,6 +12,14 @@ function loadReadme() {
         showMarkdown('#rawReadme', '#main')
     );
 }
+function loadSample() {
+
+    preload('./pages/sample.html', '#rawSample', () => {
+        const value = document.querySelector('#rawSample').innerHTML;
+        document.querySelector('#main').innerHTML = value;
+      }
+    );
+}
 function showIssue(newPage) {
     const DETAIL_HX_ID = '#detail-hx';
     const url = document.querySelector(DETAIL_HX_ID)
